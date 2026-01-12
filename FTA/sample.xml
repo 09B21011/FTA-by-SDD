@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+ <event type="no-basic" id="G1" gate="OR" >
+      <event id="A" value="0.2"/>
+      <event id="C" value="0.2"/>
+      <event id="G3" gate="AND">
+            <event id="G6" gate="OR">
+                  <event id="B" value="3.00E-02"/>
+                  <event id="C" value="1.00E-03"/>
+                  <event id="A" value="1.00E-03"/>
+            </event>
+            <event id="D" value="1.00E-02"/>
+       </event>
+  </event>
