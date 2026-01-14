@@ -1,7 +1,19 @@
 from pysdd.sdd import SddManager, Vtree
 from pyeda.boolalg.expr import Variable, Complement, AndOp, OrOp
 
-def run_sdd_from_pyeda_obj(pyeda_expr):
+def dnf_to_str(node):
+    if isinstance(node, Variable):
+        return str(node)
+    elif isinstance(node, AndOp):
+        child_nodes = [dnf_to_str(child) for child in node.xs]
+        return "(" + " & ".join(child_nodes) + ")"
+    elif isinstance(node, OrOp):
+        child_nodes = [dnf_to_str(child) for child in node.xs]
+        return "(" + " | ".join(child_nodes) + ")"
+    else:
+        raise ValueError(f"Unknown node type: {type(node)}")
+
+def run_sdd_from_pyeda_obj(pyeda_expr, formula_str):
     """
     PyEDAの式オブジェクトを直接受け取り、SDDに変換する。
     """
@@ -21,16 +33,22 @@ def run_sdd_from_pyeda_obj(pyeda_expr):
     # 2. SDDマネージャーの初期化
     var_count = len(support_vars)
     var_order = list(range(1, var_count + 1))
+    
     vtree = Vtree(var_count=var_count, var_order=var_order, vtree_type="balanced")
     sdd_manager = SddManager.from_vtree(vtree)
 
     # 変数名とSDD変数の対応付け
     name_to_sdd_var = {name: sdd_manager.vars[i+1] for i, name in enumerate(support_vars)}
 
+    dnf_str = dnf_to_str(pyeda_expr)
+    print(dnf_str)
+    """
     # 3. 再帰的に変換する内部関数
     def visit(node):
+        print(node)
         # 変数
         if isinstance(node, Variable):
+            print(name_to_sdd_var[str(node)])
             return name_to_sdd_var[str(node)]
         
         # 否定 (NOT)
@@ -43,6 +61,7 @@ def run_sdd_from_pyeda_obj(pyeda_expr):
             result = visit(node.inputs[0])
             for child in node.inputs[1:]:
                 result = result & visit(child)
+                print(result)
             return result
             
         # 論理和 (OR) -> 型は OrOp
@@ -61,12 +80,10 @@ def run_sdd_from_pyeda_obj(pyeda_expr):
         else:
             # 万が一他の型（NotOpなど）が来た場合のためのデバッグ表示
             raise ValueError(f"Unknown node type: {type(node)}")
-
+    """
     # 変換実行
-    sdd_node = visit(pyeda_expr)
+    sdd_node = eval(dnf_str, {}, name_to_sdd_var)
 
-    # --- 以下、可視化やモデルカウント ---
-    
     with open("output/sdd.dot", "w") as out:
         print(sdd_node.dot(), file=out)
     with open("output/vtree.dot", "w") as out:
