@@ -13,11 +13,9 @@ def dnf_to_str(node):
     else:
         raise ValueError(f"Unknown node type: {type(node)}")
 
-def run_sdd_from_pyeda_obj(pyeda_expr, formula_str):
-    """
-    PyEDAの式オブジェクトを直接受け取り、SDDに変換する。
-    """
-    print(f"Converting PyEDA object to SDD... (Type: {type(pyeda_expr)})")
+def run_sdd_from_pyeda_obj(pyeda_expr):
+    
+    print(f"\nConverting PyEDA object to SDD... ")
 
     # 1. 変数集合の取得
     support_vars = sorted([str(v) for v in pyeda_expr.support])
@@ -82,6 +80,7 @@ def run_sdd_from_pyeda_obj(pyeda_expr, formula_str):
             raise ValueError(f"Unknown node type: {type(node)}")
     """
     # 変換実行
+    print(name_to_sdd_var)
     sdd_node = eval(dnf_str, {}, name_to_sdd_var)
 
     with open("output/sdd.dot", "w") as out:
