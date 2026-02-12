@@ -10,7 +10,8 @@ def parse_event(event_elem):
     value = event_elem.get("value")
     if value is not None and event_id is not None:
         try:
-            prob_map[event_id] = float(value)
+            if event_id not in prob_map:
+                prob_map[event_id] = float(value)
         except ValueError:
             print(f"[警告] event id={event_id} の value={value} は数値変換できませんでした")
 
@@ -28,7 +29,7 @@ def parse_event(event_elem):
 
 def xml_to_formula(xml_path: str) -> str:
     """XMLファイルを解析して論理式（文字列）を生成"""
-    global prob_map
+    global prob_map, custum_vtree, event_count
     prob_map.clear()
 
     tree = ET.parse(xml_path)

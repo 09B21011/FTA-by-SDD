@@ -7,7 +7,7 @@
     </event>
     <event id = "G2" gate = "AND">
             <event id = "b" value = "0.01"/>
-            <event id = "c" value = "0.5"/>
+            <event id = "e" value = "0.5"/>
     </event>
     <event id = "G3" gate = "AND">
             <event id = "c" value = "0.5"/>

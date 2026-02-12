@@ -2,6 +2,7 @@ from FT_to_dnf import xml_to_formula, formula_to_dnf, prob_map
 from dnf_to_sdd import run_sdd_from_pyeda_obj
 from draw import draw
 from explore import explore
+from make_vtree import make_vtree
 
 def main():
     xml_file = "./FTA/sddEx.xml"
@@ -21,11 +22,12 @@ def main():
     for k, v in prob_map.items():
         print(f"{k}: {v}")
 
-    # 3. PyEDAオブジェクト -> SDD
-    result = run_sdd_from_pyeda_obj(dnf_expr)
-    print()
+    make_vtree(xml_file, dnf_expr)
 
-    sdd_node, mgr, var_map = result
+    # 3. PyEDAオブジェクト -> SDD
+    sdd_node, mgr, var_map = run_sdd_from_pyeda_obj(dnf_expr)
+
+
     explore(sdd_node)
     
     mode = 1
