@@ -20,7 +20,7 @@ def run_sdd_from_pyeda_obj(pyeda_expr):
 
     # 1. 変数集合の取得
     support_vars = sorted([str(v) for v in pyeda_expr.support])
-    
+    print(support_vars)
     if not support_vars:
         if pyeda_expr.is_one():
             print("Formula is always TRUE")

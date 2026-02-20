@@ -5,7 +5,7 @@ from explore import explore
 from make_vtree import make_vtree
 
 def main():
-    xml_file = "./FTA/sddEx.xml"
+    xml_file = "./FTA/sample.xml"
     
     # 1. XML -> 論理式文字列
     formula_str = xml_to_formula(xml_file)
@@ -26,7 +26,6 @@ def main():
 
     # 3. PyEDAオブジェクト -> SDD
     sdd_node, mgr, var_map = run_sdd_from_pyeda_obj(dnf_expr)
-
 
     explore(sdd_node)
     
